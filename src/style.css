@@ -52,15 +52,11 @@
   #social .button-icon {
     filter: invert(1) brightness(2);
   }
-}
 
-  margin: 0;
-  background: #181818 !important;
-}
 html, body, #app {
   background: #181818 !important;
   min-height: 100vh;
-}
+  margin: 0;
 }
 
 h1,
