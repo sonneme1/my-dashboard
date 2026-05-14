@@ -14,8 +14,8 @@
         class="mr-4"
       />
       <v-menu v-model="menu" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
-        <template #activator="{ on, attrs }">
-          <v-btn v-bind="attrs" v-on="on" color="secondary" dark>
+        <template #activator="{ props }">
+          <v-btn v-bind="props" color="secondary" dark>
             {{ dateRangeLabel }}
           </v-btn>
         </template>
@@ -82,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { VApp, VAppBar, VToolbarTitle, VSpacer, VSelect, VMenu, VBtn, VDatePicker, VMain, VContainer, VRow, VCol, VCard, VIcon } from 'vuetify/components';
 import LineChart from '../components/LineChart.vue';
 import BarChart from '../components/BarChart.vue';
