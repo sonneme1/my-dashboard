@@ -3,34 +3,61 @@
     <v-app-bar color="primary" dark>
       <v-toolbar-title>FastForward Logistics</v-toolbar-title>
       <v-spacer />
-      <!-- Filters: Date Range, Region, Month -->
-      <v-select
-        v-model="selectedRegion"
-        :items="regionOptions"
-        label="Region"
-        style="max-width: 180px;"
-        class="mr-4"
-        clearable
-      />
-      <v-select
-        v-model="selectedDateRange"
-        :items="dateRangeOptions"
-        item-title="label"
-        item-value="value"
-        label="Date Range"
-        style="max-width: 180px; color: #fff;"
-        class="mr-4"
-        clearable
-      />
+      <!-- Desktop Filters -->
+      <div class="d-none d-md-flex align-center">
+        <v-select
+          v-model="selectedRegion"
+          :items="regionOptions"
+          label="Region"
+          style="max-width: 180px;"
+          class="mr-4"
+          clearable
+        />
+        <v-select
+          v-model="selectedDateRange"
+          :items="dateRangeOptions"
+          item-title="label"
+          item-value="value"
+          label="Date Range"
+          style="max-width: 180px; color: #fff;"
+          class="mr-4"
+          clearable
+        />
+      </div>
+      <!-- Mobile Filters Button -->
+      <v-app-bar-nav-icon class="d-md-none" @click="drawer = true" />
     </v-app-bar>
+    <!-- Mobile Drawer -->
+    <v-navigation-drawer v-model="drawer" temporary location="right" class="d-md-none">
+      <v-list>
+        <v-list-item>
+          <v-select
+            v-model="selectedRegion"
+            :items="regionOptions"
+            label="Region"
+            clearable
+          />
+        </v-list-item>
+        <v-list-item>
+          <v-select
+            v-model="selectedDateRange"
+            :items="dateRangeOptions"
+            item-title="label"
+            item-value="value"
+            label="Date Range"
+            clearable
+          />
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
     <v-main>
       <v-container fluid>
         <!-- Summary Cards -->
         <v-row class="mt-6" dense>
           <v-col cols="12" sm="6" md="3" v-for="card in summaryCards" :key="card.title">
-            <v-card class="pa-4 summary-card summary-card-dark" dark>
+            <v-card class="pa-4 summary-card summary-card-dark left-align-card" dark>
               <div class="d-flex align-center justify-space-between">
-                <div>
+                <div class="card-text-left">
                   <div class="text-h6">{{ card.title }}</div>
                   <div class="text-h4 font-weight-bold">{{ card.value }}</div>
                 </div>
@@ -38,7 +65,7 @@
                   {{ card.trend > 0 ? 'mdi-arrow-up' : card.trend < 0 ? 'mdi-arrow-down' : 'mdi-minus' }}
                 </v-icon>
               </div>
-              <div class="caption mt-2">{{ card.subtitle }}</div>
+              <div class="caption mt-2 card-text-left">{{ card.subtitle }}</div>
             </v-card>
           </v-col>
         </v-row>
@@ -100,6 +127,7 @@ export default defineComponent({
           }
         }
     const today = new Date('2025-12-31');
+    const drawer = ref(false);
     const selectedRegion = ref('All');
     const selectedDateRange = ref('1y');
     const dateRangeOptions = [
@@ -303,6 +331,7 @@ export default defineComponent({
     });
 
     return {
+      drawer,
       selectedRegion,
       regionOptions,
       selectedDateRange,
