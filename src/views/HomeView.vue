@@ -320,10 +320,6 @@ export default defineComponent({
       };
     });
 
-    const dateRangeLabel = computed(() => {
-      // Removed dateRangeLabel as it is unused
-      return `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`;
-    });
 
     return {
       drawer,
@@ -335,8 +331,7 @@ export default defineComponent({
       shipmentVolumeChartData,
       onTimeRateChartData,
       regionalPerformanceChartData,
-      exceptionsChartData,
-      // Removed onDateRangeChange and dateRangeLabel from return statement
+      exceptionsChartData
     };
   },
 });
