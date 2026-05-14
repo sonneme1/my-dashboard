@@ -120,12 +120,7 @@ export default defineComponent({
   },
   setup() {
         // Only close menu when both start and end dates are selected
-        function onDateRangeChange(val: Date[]) {
-          dateRange.value = val;
-          if (val && val.length === 2 && val[0] && val[1]) {
-            menu.value = false;
-          }
-        }
+          // Removed onDateRangeChange function as it is unused
     const today = new Date('2025-12-31');
     const drawer = ref(false);
     const selectedRegion = ref('All');
@@ -326,7 +321,7 @@ export default defineComponent({
     });
 
     const dateRangeLabel = computed(() => {
-      const [start, end] = dateRange.value;
+      // Removed dateRangeLabel as it is unused
       return `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`;
     });
 
@@ -341,6 +336,7 @@ export default defineComponent({
       onTimeRateChartData,
       regionalPerformanceChartData,
       exceptionsChartData,
+      // Removed onDateRangeChange and dateRangeLabel from return statement
     };
   },
 });
