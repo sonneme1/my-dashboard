@@ -163,8 +163,10 @@ export default defineComponent({
       // Group by month
       const months = Array.from(new Set(data.map((d: any) => d.month))).sort();
       const regionSet = selectedRegion.value.length === 4 ? regionOptions : selectedRegion.value;
+      // Cohesive palette: blue, teal, grey, cyan
+      const palette = ['#1976d2', '#26a69a', '#90a4ae', '#00bcd4'];
       const datasets = regionSet.map((region: string, idx: number) => {
-        const color = ['#42a5f5', '#66bb6a', '#ffa726', '#ab47bc'][idx % 4];
+        const color = palette[idx % palette.length];
         return {
           label: region,
           data: months.map((m: string) => {
@@ -188,10 +190,11 @@ export default defineComponent({
       const data = filteredData.value;
       const months = Array.from(new Set(data.map((d: any) => d.month))).sort();
       const regionSet = selectedRegion.value.length === 4 ? regionOptions : selectedRegion.value;
+      const palette = ['#1976d2', '#26a69a', '#90a4ae', '#00bcd4'];
       return {
         labels: months,
         datasets: regionSet.map((region: string, idx: number) => {
-          const color = ['#42a5f5', '#66bb6a', '#ffa726', '#ab47bc'][idx % 4];
+          const color = palette[idx % palette.length];
           return {
             label: region,
             data: months.map((m: string) => {
@@ -209,6 +212,8 @@ export default defineComponent({
       const data = filteredData.value;
       // Sum by region
       const regionSet = selectedRegion.value.length === 4 ? regionOptions : selectedRegion.value;
+      const palette = ['#1976d2', '#26a69a', '#90a4ae', '#00bcd4'];
+      const paletteLight = ['#64b5f6', '#4dd0e1', '#b0bec5', '#80cbc4'];
       return {
         labels: regionSet,
         datasets: [
@@ -217,7 +222,7 @@ export default defineComponent({
             data: regionSet.map((region: string) => {
               return data.filter((d: any) => d.region === region).reduce((sum: number, d: any) => sum + d.shipments.total, 0);
             }),
-            backgroundColor: ['#42a5f5', '#66bb6a', '#ffa726', '#ab47bc'],
+            backgroundColor: palette,
           },
           {
             label: 'On-Time Rate (%)',
@@ -225,7 +230,7 @@ export default defineComponent({
               const regionData = data.filter((d: any) => d.region === region);
               return regionData.length ? Math.round(regionData.reduce((sum: number, d: any) => sum + d.on_time_delivery.rate, 0) / regionData.length * 100) : 0;
             }),
-            backgroundColor: ['#90caf9', '#a5d6a7', '#ffcc80', '#ce93d8'],
+            backgroundColor: paletteLight,
           },
         ],
       };
@@ -237,10 +242,11 @@ export default defineComponent({
       const months = Array.from(new Set(data.map((d: any) => d.month))).sort();
       // Exception types
       const types = ['open', 'damaged', 'delayed', 'lost', 'customs_hold'];
+      const palette = ['#1976d2', '#26a69a', '#90a4ae', '#00bcd4', '#78909c'];
       return {
         labels: months,
         datasets: types.map((type: string, idx: number) => {
-          const color = ['#ef5350', '#ffa726', '#42a5f5', '#ab47bc', '#66bb6a'][idx % 5];
+          const color = palette[idx % palette.length];
           return {
             label: type.charAt(0).toUpperCase() + type.slice(1),
             data: months.map((m: string) => {
