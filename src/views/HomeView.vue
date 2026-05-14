@@ -51,7 +51,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-main>
-      <v-container fluid>
+      <v-container>
         <!-- Summary Cards -->
         <v-row class="mt-6" dense>
           <v-col cols="12" sm="6" md="3" v-for="card in summaryCards" :key="card.title">
