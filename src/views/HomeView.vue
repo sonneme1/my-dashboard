@@ -33,7 +33,7 @@
         <!-- Summary Cards -->
         <v-row class="mt-6" dense>
           <v-col cols="12" sm="6" md="3" v-for="card in summaryCards" :key="card.title">
-            <v-card class="pa-4" :color="card.color" dark>
+            <v-card class="pa-4 summary-card" :color="card.color" dark>
               <div class="d-flex align-center justify-space-between">
                 <div>
                   <div class="text-h6">{{ card.title }}</div>
@@ -48,15 +48,15 @@
           </v-col>
         </v-row>
         <!-- Charts -->
-        <v-row class="mt-8" dense>
-          <v-col cols="12" md="8">
-            <v-card class="pa-4">
+        <v-row class="mt-8" dense align="stretch">
+          <v-col cols="12" md="6">
+            <v-card class="pa-4 chart-card" height="100%">
               <div class="text-h6 mb-2">Shipment Volume Trend</div>
               <line-chart :chart-data="shipmentVolumeChartData" />
             </v-card>
           </v-col>
-          <v-col cols="12" md="4">
-            <v-card class="pa-4">
+          <v-col cols="12" md="6">
+            <v-card class="pa-4 chart-card" height="100%">
               <div class="text-h6 mb-2">On-Time Delivery Rate</div>
               <bar-chart :chart-data="onTimeRateChartData" />
             </v-card>
@@ -283,5 +283,22 @@ export default defineComponent({
 <style scoped>
 .v-application {
   background: #181818;
+}
+/* Make summary cards the same height */
+.summary-card {
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+/* Make chart cards in 2nd row same height */
+.chart-card {
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 </style>
