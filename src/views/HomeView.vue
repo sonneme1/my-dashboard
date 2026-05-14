@@ -33,7 +33,7 @@
         <!-- Summary Cards -->
         <v-row class="mt-6" dense>
           <v-col cols="12" sm="6" md="3" v-for="card in summaryCards" :key="card.title">
-            <v-card class="pa-4 summary-card" :color="card.color" dark>
+            <v-card class="pa-4 summary-card summary-card-dark" dark>
               <div class="d-flex align-center justify-space-between">
                 <div>
                   <div class="text-h6">{{ card.title }}</div>
@@ -281,6 +281,23 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.dashboard-bg,
+html,
+body,
+#app,
+.v-application,
+.v-main,
+.v-container {
+  background: #181818 !important;
+  min-height: 100vh;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.summary-card-dark {
+  background-color: #23232b !important;
+  color: #fff !important;
+}
 .v-application {
   background: #181818;
 }
@@ -291,6 +308,11 @@ export default defineComponent({
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+}
+
+.summary-card-dark {
+  background-color: #23232b !important;
+  /* Matches the chart card background */
 }
 
 /* Make chart cards in 2nd row same height */
