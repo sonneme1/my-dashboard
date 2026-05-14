@@ -8,25 +8,20 @@
         v-model="selectedRegion"
         :items="regionOptions"
         label="Region"
-        multiple
-        clearable
         style="max-width: 180px;"
         class="mr-4"
+        clearable
       />
-      <v-menu v-model="menu" :close-on-content-click="false" transition="scale-transition" offset-y min-width="auto">
-        <template #activator="{ props }">
-          <v-btn v-bind="props" color="secondary" dark>
-            {{ dateRangeLabel }}
-          </v-btn>
-        </template>
-        <v-date-picker
-          v-model="dateRange"
-          range
-          color="primary"
-          :max="maxDate"
-          @change="menu = false"
-        />
-      </v-menu>
+      <v-select
+        v-model="selectedDateRange"
+        :items="dateRangeOptions"
+        item-title="label"
+        item-value="value"
+        label="Date Range"
+        style="max-width: 180px; color: #fff;"
+        class="mr-4"
+        clearable
+      />
     </v-app-bar>
     <v-main>
       <v-container fluid>
@@ -88,7 +83,7 @@ import LineChart from '../components/LineChart.vue';
 import BarChart from '../components/BarChart.vue';
 import metricsData from '../data/metrics.json';
 
-const regionOptions = ['North', 'West', 'South', 'East'];
+const regionOptions = ['All', 'North', 'South', 'East', 'West'];
 
 export default defineComponent({
   name: 'HomeView',
@@ -97,18 +92,46 @@ export default defineComponent({
     LineChart, BarChart,
   },
   setup() {
+        // Only close menu when both start and end dates are selected
+        function onDateRangeChange(val: Date[]) {
+          dateRange.value = val;
+          if (val && val.length === 2 && val[0] && val[1]) {
+            menu.value = false;
+          }
+        }
     const today = new Date('2025-12-31');
-    const menu = ref(false);
-    const selectedRegion = ref([...regionOptions]);
-    const dateRange = ref([new Date('2025-01-01'), today]);
-    const maxDate = '2025-12-31';
+    const selectedRegion = ref('All');
+    const selectedDateRange = ref('1y');
+    const dateRangeOptions = [
+      { label: 'Last 30 Days', value: '30d' },
+      { label: 'Last 60 Days', value: '60d' },
+      { label: 'Last 6 Months', value: '6m' },
+      { label: 'Last Year', value: '1y' },
+    ];
 
     // Filtered data
     const filteredData = computed(() => {
+      let regionFilter: string[];
+      if (selectedRegion.value === 'All') {
+        regionFilter = ['North', 'South', 'East', 'West'];
+      } else {
+        regionFilter = [selectedRegion.value];
+      }
+      // Calculate start date based on selectedDateRange
+      let startDate = new Date(today);
+      if (selectedDateRange.value === '30d') {
+        startDate.setDate(today.getDate() - 30);
+      } else if (selectedDateRange.value === '60d') {
+        startDate.setDate(today.getDate() - 60);
+      } else if (selectedDateRange.value === '6m') {
+        startDate.setMonth(today.getMonth() - 6);
+      } else if (selectedDateRange.value === '1y') {
+        startDate.setFullYear(today.getFullYear() - 1);
+      }
       return metricsData.filter((item: any) => {
-        const inRegion = selectedRegion.value.includes(item.region);
+        const inRegion = regionFilter.includes(item.region);
         const monthDate = new Date(item.month + '-01');
-        const inRange = monthDate >= dateRange.value[0] && monthDate <= dateRange.value[1];
+        const inRange = monthDate >= startDate && monthDate <= today;
         return inRegion && inRange;
       });
     });
@@ -162,7 +185,13 @@ export default defineComponent({
       const data = filteredData.value;
       // Group by month
       const months = Array.from(new Set(data.map((d: any) => d.month))).sort();
-      const regionSet = selectedRegion.value.length === 4 ? regionOptions : selectedRegion.value;
+      // Always use an array for regionSet
+      let regionSet: string[];
+      if (selectedRegion.value === 'All') {
+        regionSet = ['North', 'South', 'East', 'West'];
+      } else {
+        regionSet = [selectedRegion.value];
+      }
       // Cohesive palette: blue, teal, grey, cyan
       const palette = ['#1976d2', '#26a69a', '#90a4ae', '#00bcd4'];
       const datasets = regionSet.map((region: string, idx: number) => {
@@ -189,7 +218,12 @@ export default defineComponent({
     const onTimeRateChartData = computed(() => {
       const data = filteredData.value;
       const months = Array.from(new Set(data.map((d: any) => d.month))).sort();
-      const regionSet = selectedRegion.value.length === 4 ? regionOptions : selectedRegion.value;
+      let regionSet: string[];
+      if (selectedRegion.value === 'All') {
+        regionSet = ['North', 'South', 'East', 'West'];
+      } else {
+        regionSet = [selectedRegion.value];
+      }
       const palette = ['#1976d2', '#26a69a', '#90a4ae', '#00bcd4'];
       return {
         labels: months,
@@ -210,8 +244,13 @@ export default defineComponent({
     // Regional Performance (Bar)
     const regionalPerformanceChartData = computed(() => {
       const data = filteredData.value;
-      // Sum by region
-      const regionSet = selectedRegion.value.length === 4 ? regionOptions : selectedRegion.value;
+      // Always use an array for regionSet
+      let regionSet: string[];
+      if (selectedRegion.value === 'All') {
+        regionSet = ['North', 'South', 'East', 'West'];
+      } else {
+        regionSet = [selectedRegion.value];
+      }
       const palette = ['#1976d2', '#26a69a', '#90a4ae', '#00bcd4'];
       const paletteLight = ['#64b5f6', '#4dd0e1', '#b0bec5', '#80cbc4'];
       return {
@@ -264,17 +303,15 @@ export default defineComponent({
     });
 
     return {
-      menu,
       selectedRegion,
       regionOptions,
-      dateRange,
-      maxDate,
+      selectedDateRange,
+      dateRangeOptions,
       summaryCards,
       shipmentVolumeChartData,
       onTimeRateChartData,
       regionalPerformanceChartData,
       exceptionsChartData,
-      dateRangeLabel,
     };
   },
 });
